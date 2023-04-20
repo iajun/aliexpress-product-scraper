@@ -3,6 +3,8 @@ const cheerio = require('cheerio');
 
 const Variants = require('./variants');
 const Feedback = require('./feedback');
+const cookie = require('./cookies');
+const fs = require('fs')
 
 async function AliexpressProductScraper(productId, feedbackLimit) {
   const FEEDBACK_LIMIT = feedbackLimit || 10;
@@ -10,7 +12,10 @@ async function AliexpressProductScraper(productId, feedbackLimit) {
   const page = await browser.newPage();
 
   /** Scrape the aliexpress product page for details */
-  await page.goto(`https://www.aliexpress.com/item/${productId}.html`);
+
+  await page.setCookie(...cookie)
+
+  await page.goto(`https://www.aliexpress.us/item/${productId}.html`);
   const aliExpressData = await page.evaluate(() => runParams);
 
   const data = aliExpressData.data;
@@ -78,16 +83,17 @@ async function AliexpressProductScraper(productId, feedbackLimit) {
       max: data.priceModule.maxAmount.value
     },
     salePrice: {
-      min: data.priceModule.minActivityAmount 
-        ? data.priceModule.minActivityAmount.value 
+      min: data.priceModule.minActivityAmount
+        ? data.priceModule.minActivityAmount.value
         : data.priceModule.minAmount.value,
-      max: data.priceModule.maxActivityAmount 
-        ? data.priceModule.maxActivityAmount.value 
+      max: data.priceModule.maxActivityAmount
+        ? data.priceModule.maxActivityAmount.value
         : data.priceModule.maxAmount.value,
     }
   };
 
   return json;
 }
+
 
 module.exports = AliexpressProductScraper;
