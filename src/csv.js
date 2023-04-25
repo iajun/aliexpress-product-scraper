@@ -4,11 +4,17 @@ const AliexpressProductScraper = require('./aliexpressProductScraper');
 const { chain, range } = require('lodash')
 const os = require('os');
 const path = require('path');
+const {ProductName} = require('./config')
  
 dir_home = os.homedir();
 
+const FILES = {
+  PRODUCTS: 'products.csv',
+
+}
+
 // Define the headers for the CSV file
-const headers = [
+const ProductHeaders = [
   'Handle',
   'Title*',
   'Subtitle',
@@ -48,7 +54,7 @@ const headers = [
 
 // Define a function to map your data object to the CSV format
 const mapDataToCSV = (data) => {
-  const { title, variants, images, originalPrice, salePrice } = data;
+  const { title, variants } = data;
   const rows = [];
 
   const optionMap = chain(variants.options).map(option => option.values.map(value => ({ ...value, optionName: option.name }))).flatten().keyBy('id').value()
@@ -94,8 +100,8 @@ const mapDataToCSV = (data) => {
     ]
 
     if (!rows.length) {
-      row[1] = title;
-      row[0] = title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+      row[0] = ProductName[data.productId].handle;
+      row[1] = ProductName[data.productId].title;
       row[3] = data.description
     }
 
@@ -107,7 +113,7 @@ const mapDataToCSV = (data) => {
 async function generateProductsCsv(ids) {
   const list = await Promise.all(ids.map(id => AliexpressProductScraper(id)))
   // Convert the data to a CSV string
-  stringify([headers, ...list.map(data => mapDataToCSV(data)).flat()], (err, output) => {
+  stringify([ProductHeaders, ...list.map(data => mapDataToCSV(data)).flat()], (err, output) => {
     if (err) {
       console.error(err);
       return;

@@ -4,11 +4,12 @@ const cheerio = require('cheerio');
 const Variants = require('./variants');
 const Feedback = require('./feedback');
 const cookie = require('./cookies');
-const fs = require('fs')
 
 async function AliexpressProductScraper(productId, feedbackLimit) {
   const FEEDBACK_LIMIT = feedbackLimit || 10;
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    devtools: true
+  });
   const page = await browser.newPage();
 
   /** Scrape the aliexpress product page for details */
