@@ -29,6 +29,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
     "csv-stringify": "^6.3.2",
+    "dayjs": "^1.11.7",
     "faker": "^5.5.3",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",

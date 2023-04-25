@@ -7,9 +7,7 @@ const cookie = require('./cookies');
 
 async function AliexpressProductScraper(productId, feedbackLimit) {
   const FEEDBACK_LIMIT = feedbackLimit || 10;
-  const browser = await puppeteer.launch({
-    devtools: true
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   /** Scrape the aliexpress product page for details */

@@ -1,17 +1,5 @@
-const fs = require('fs');
-const { stringify } = require('csv-stringify');
-const AliexpressProductScraper = require('./aliexpressProductScraper');
 const { chain, range } = require('lodash')
-const os = require('os');
-const path = require('path');
-const {ProductName} = require('./config')
- 
-dir_home = os.homedir();
-
-const FILES = {
-  PRODUCTS: 'products.csv',
-
-}
+const { ProductName } = require('./config')
 
 // Define the headers for the CSV file
 const ProductHeaders = [
@@ -52,8 +40,7 @@ const ProductHeaders = [
   'Barcode (ISBN, UPC, GTIN, etc.)'
 ];
 
-// Define a function to map your data object to the CSV format
-const mapDataToCSV = (data) => {
+function transform(data) {
   const { title, variants } = data;
   const rows = [];
 
@@ -108,27 +95,17 @@ const mapDataToCSV = (data) => {
     rows.push(row)
   })
   return rows;
-};
-
-async function generateProductsCsv(ids) {
-  const list = await Promise.all(ids.map(id => AliexpressProductScraper(id)))
-  // Convert the data to a CSV string
-  stringify([ProductHeaders, ...list.map(data => mapDataToCSV(data)).flat()], (err, output) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-
-    // Write the CSV string to a file
-    fs.writeFile(path.join(dir_home, 'Desktop/output.csv'), output, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      console.log('CSV file saved successfully!');
-    });
-  });
 }
 
-generateProductsCsv([3256804696361589])
+
+module.exports = function (productList) {
+  const rows = productList.map(transform).flat();
+
+  return {
+    name: 'product-list',
+    rows: [
+      ProductHeaders,
+      ...rows
+    ]
+  }
+}
