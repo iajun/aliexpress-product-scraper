@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const { stringify } = require('csv-stringify');
-const { cwd } = require('process');
+const fs = require("fs");
+const path = require("path");
+const { stringify } = require("csv-stringify");
+const { cwd } = require("process");
 
 function writeCSV(list, name) {
   // Convert the data to a CSV string
@@ -22,4 +22,4 @@ function writeCSV(list, name) {
   });
 }
 
-module.exports = writeCSV
+module.exports = writeCSV;

@@ -1,4 +1,4 @@
-const productTransformer = require('./product')
-const reviewTransformer = require('./review')
+const productTransformer = require("./product");
+const reviewTransformer = require("./review");
 
-module.exports = [productTransformer, reviewTransformer]
+module.exports = [productTransformer, reviewTransformer];

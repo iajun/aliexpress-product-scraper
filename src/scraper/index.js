@@ -1,1 +1,1 @@
-module.exports = require('./aliexpressProductScraper')
+module.exports = require("./aliexpressProductScraper");
